@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-contract user{
+contract Users{
 
     struct User{
         bytes32 id;

@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-contract trader{
+contract Trader{
 
     struct Order{
         bytes32 pid;
