@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from "../Sidebar/SideBar";
 import "./SellUnits.css";
 import { Sell, CurrencyRupee, Remove } from "@mui/icons-material";
 import { useState } from "react";
 
 const SellUnits = () => {
+  const [success, setSuccess] = useState(false);
+  const [mess, setMess] = useState("");
+  const [err, setErr] = useState(false);
   const [price, setPrice] = useState(8);
   const [amount, setAmount] = useState(0);
   const [unit, setUnit] = useState(0);
+  const host = "http://localhost:5000";
+  const updateUnits = async () => {
+    const response = await fetch(`${host}/api/unit/updateunits`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        price,
+        unitsToUpdate: unit,
+      }),
+    });
+    const data = await response.json();
+    if (data.success) setSuccess(true);
+    else setErr(true);
+    setMess(data.message);
+  };
+
   return (
     <>
       <div className="w-100 h-100 d-flex justify-content-between flex-row">
@@ -32,6 +54,9 @@ const SellUnits = () => {
                     let val = e.target.value;
                     setPrice(parseInt(val));
                     setAmount(val * unit);
+                    setErr(false);
+                    setSuccess(false);
+                    setMess("");
                   }}
                 />
               </div>
@@ -44,7 +69,7 @@ const SellUnits = () => {
               </div>
             </div>
             <div className="sec3">
-              <h6 className="ttl">Select number of units to buy</h6>
+              <h6 className="ttl">Select number of units to sell</h6>
               <input
                 className="ttl text-warning"
                 type="number"
@@ -61,6 +86,9 @@ const SellUnits = () => {
                   let val = parseInt(e.target.value);
                   setUnit(val);
                   setAmount(val * price);
+                  setErr(false);
+                  setSuccess(false);
+                  setMess("");
                 }}
                 required
               ></input>
@@ -75,10 +103,35 @@ const SellUnits = () => {
               </div>
             </div>
             <div className="sec5">
-              <button className="bg-danger text-white px-3 py-2 mt-2 mb-3 b1">
+              <button
+                className="bg-danger text-white px-3 py-2 mt-2 mb-3 b1"
+                onClick={updateUnits}
+              >
                 <Remove /> Sell units
               </button>
             </div>
+            {success ? (
+              <div
+                className="p-1 mt-1 text-success text-center"
+                style={{ fontFamily: "Times New Roman" }}
+              >
+                {mess}
+              </div>
+            ) : (
+              ""
+            )}
+            {err ? (
+              <div>
+                <div
+                  className="mt-1 text-warning text-break text-center"
+                  style={{ fontFamily: "Times New Roman" }}
+                >
+                  {mess}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

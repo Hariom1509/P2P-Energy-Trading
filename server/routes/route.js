@@ -9,9 +9,15 @@ const {
   GetUser
 } = require("./auth");
 const { body, validationResult } = require("express-validator");
+const { UpdateUnits, FetchUnits } = require("./unit");
+const verifytoken = require("../middleware/verifytoken");
 
 //to get user information
-router.post("/auth/getuser", GetUser);
+router.post("/auth/getuser", verifytoken, GetUser);
+
+//to update units information
+router.post("/unit/updateunits", verifytoken, UpdateUnits);
+router.get("/unit/fetchunits", FetchUnits);
 
 //Routes from login - Registration
 router.post(

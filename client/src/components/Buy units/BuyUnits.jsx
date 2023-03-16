@@ -1,15 +1,53 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from "../Sidebar/SideBar";
 import "./BuyUnits.css";
 import { ShoppingCart, CurrencyRupee, Add } from "@mui/icons-material";
 import { useState } from "react";
 
 const BuyUnits = () => {
-  const [seller, setSeller] = useState("seller");
+  const [success, setSuccess] = useState(false);
+  const [mess, setMess] = useState("");
+  const [err, setErr] = useState(false);
+  const [seller, setSeller] = useState("seller name");
   const [price, setPrice] = useState(0);
   const [maxUnits, setMaxUnits] = useState("0");
   const [amount, setAmount] = useState(0);
   const [unit, setUnit] = useState(0);
+  const [id, setId] = useState("Initial id");
+  const [units, setUnits] = useState([]);
+  const updateUnits = async () => {
+    const host = "http://localhost:5000";
+    const response = await fetch(`${host}/api/unit/updateunits`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        price,
+        unitsToUpdate: -1 * unit,
+        _id: id,
+      }),
+    });
+    const data = await response.json();
+    if (data.success) setSuccess(true);
+    else setErr(true);
+    setMess(data.message);
+  };
+  const FetchUnits = async () => {
+    const host = "http://localhost:5000";
+    const response = await fetch(`${host}/api/unit/fetchunits`, {
+      method: "GET",
+    });
+    const data = await response.json();
+    setUnits(data);
+  };
+  // const Update = (e) => {
+
+  // };
+  useEffect(() => {
+    FetchUnits();
+  }, []);
   return (
     <>
       <div className="w-100 h-100 d-flex justify-content-between flex-row">
@@ -26,35 +64,34 @@ const BuyUnits = () => {
                   className="form-select classic"
                   id="validationDefault03"
                   onChange={(e) => {
-                    let val = e.target.value;
-                    let num = 0;
-                    let newVal = "";
-                    let cnt = 0;
-                    for (let i = 0; i < val.length; i++) {
-                      if (val[i] === ",") {
-                        if (cnt === 0) setSeller(newVal);
-                        else {
-                          num = parseInt(newVal);
-                          setPrice(num);
-                          setAmount(num * unit);
-                        }
-                        newVal = "";
-                        cnt++;
-                        i++;
-                        continue;
-                      }
-                      newVal += val[i];
-                    }
-                    setMaxUnits(newVal);
-                    newVal = "";
+                    const val = e.target.value;
+                    const details = val.split(",");
+                    setId(details[0]);
+                    setSeller(details[1]);
+                    setPrice(parseInt(details[2]));
+                    setMaxUnits(details[3]);
+                    setErr(false);
+                    setSuccess(false);
+                    setMess("");
                   }}
                   required
                 >
-                  <option value="Area" disabled selected>
-                    Seller, unit price, total units
+                  <option value="Area" selected disabled>
+                    seller, unit price, total units
                   </option>
-                  <option value="Hariom Vyas, 7, 5">Hariom Vyas, 7, 5</option>
-                  <option value="Reeti Shah, 8, 2">Reeti Shah, 8, 2</option>
+                  {units.map((unit) => (
+                    <option
+                      value={[
+                        unit.userID,
+                        unit.userName,
+                        unit.price,
+                        unit.units,
+                      ]}
+                      key={unit.userID}
+                    >
+                      {unit.userName}, {unit.price}, {unit.units}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="w-100 my-1 py-1 d-flex justify-content-between">
@@ -94,6 +131,9 @@ const BuyUnits = () => {
                   }
                   setUnit(val);
                   setAmount(val * price);
+                  setErr(false);
+                  setSuccess(false);
+                  setMess("");
                 }}
                 required
               ></input>
@@ -108,10 +148,35 @@ const BuyUnits = () => {
               </div>
             </div>
             <div className="sec5">
-              <button className="bg-success text-white px-3 py-2 mt-2 mb-3 b1">
+              <button
+                className="bg-success text-white px-3 py-2 mt-2 mb-3 b1"
+                onClick={updateUnits}
+              >
                 <Add /> Buy units
               </button>
             </div>
+            {success ? (
+              <div
+                className="p-1 mt-1 text-success text-center"
+                style={{ fontFamily: "Times New Roman" }}
+              >
+                {mess}
+              </div>
+            ) : (
+              ""
+            )}
+            {err ? (
+              <div>
+                <div
+                  className="mt-1 text-warning text-break text-center"
+                  style={{ fontFamily: "Times New Roman" }}
+                >
+                  {mess}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>
