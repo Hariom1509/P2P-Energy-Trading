@@ -48,11 +48,12 @@ exports.Registration = async (request, response) => {
       area,
       type,
       mobileNumber,
-      varified
+      varified,
+      isVerified: false
     });
-
     user.save(async (err, user) => {
       if (err) {
+        console.log(err);
         return response.status(200).json({
           success: false,
           message: "Your request could not be processed. Please try again.",
@@ -75,9 +76,9 @@ exports.Registration = async (request, response) => {
         },
       };
 
-      const authtoken = jwt.sign(data, secret);
+      const token = jwt.sign(data, secret);
       response.status(200).json({
-        authtoken,
+        authtoken: `Bearer ${token}`,
         success: true,
         email: user.email,
         uid: user._id,
@@ -121,12 +122,17 @@ exports.Login = async (request, response) => {
 
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
-        const payload = { id: user._id };
-
-        jwt.sign(payload, secret, { expiresIn: tokenLife }, (err, token) => {
+        const data = {
+          user: {
+            id: user._id,
+          },
+        };
+        console.log({user, data});
+        const token = jwt.sign(data, secret);
+        
           response.status(200).json({
             success: true,
-            token: `Bearer ${token}`,
+            authtoken: `Bearer ${token}`,
             user: {
               id: user._id,
               name: user.name,
@@ -135,7 +141,7 @@ exports.Login = async (request, response) => {
             message: "Login Successful.",
             severity: "success",
           });
-        });
+        
 
         // console.log(user);
       } else {
@@ -280,10 +286,9 @@ exports.ResetPassword = async (request, response) => {
 
 // User details
 exports.GetUser = async (request, response) => {
-  const email = request.body.email;
-
+  const _id = request.id
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ _id });
     response.json({
       success: true,
       name: user.name,
@@ -295,6 +300,6 @@ exports.GetUser = async (request, response) => {
   } catch (error) {
     response
       .status(500)
-      .json({ success: false, message: "Internal Server Error" });
+      .json({ success: false, message: error });
   }
 };

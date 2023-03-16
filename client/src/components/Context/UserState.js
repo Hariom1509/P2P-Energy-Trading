@@ -26,10 +26,12 @@ export const UserState = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "token": localStorage.getItem('token')
       },
-      body: JSON.stringify({ email: localStorage.getItem("email") }),
+
     });
     const data = await response.json();
+    console.log(data);
     setUser(data);
   };
 

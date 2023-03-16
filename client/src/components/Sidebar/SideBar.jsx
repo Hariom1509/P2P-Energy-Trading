@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,10 +12,18 @@ import {
   PowerSettingsNew,
   Insights,
 } from "@mui/icons-material";
+import { UserContext } from "../Context/UserState";
+import { useContext } from "react";
 
 const SideBar = () => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+  const context = useContext(UserContext);
+  const { user, getUser } = context;
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <>
@@ -84,20 +92,24 @@ const SideBar = () => {
             Buy Units
           </button>
         </div>
-        <div className="d-flex flex-row comp w-100 py-2 mb-2">
-          <PlaylistRemove
-            color="black"
-            cursor="pointer"
-            onClick={() => navigate("/sell")}
-          />{" "}
-          <button
-            className="w-75 px-2"
-            style={{ display: show ? "block" : "none" }}
-            onClick={() => navigate("/sell")}
-          >
-            Sell Units
-          </button>
-        </div>
+        {user.type === "Prosumer" ? (
+          <div className="d-flex flex-row comp w-100 py-2 mb-2">
+            <PlaylistRemove
+              color="black"
+              cursor="pointer"
+              onClick={() => navigate("/sell")}
+            />{" "}
+            <button
+              className="w-75 px-2"
+              style={{ display: show ? "block" : "none" }}
+              onClick={() => navigate("/sell")}
+            >
+              Sell Units
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
         <div className="d-flex flex-row comp w-100 py-2 mb-2">
           <History
             color="black"
@@ -135,7 +147,10 @@ const SideBar = () => {
           <button
             className="w-75 px-2"
             style={{ display: show ? "block" : "none" }}
-            onClick={() => navigate("/signin")}
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/signin");
+            }}
           >
             Sign Out
           </button>

@@ -32,7 +32,7 @@ const signIn = () => {
     });
     const data = await response.json();
     if (data.success) {
-      localStorage.setItem("email", data.user.email);
+      localStorage.setItem("token", data.authtoken);
 
       // setuser(
       //   data.user.id,

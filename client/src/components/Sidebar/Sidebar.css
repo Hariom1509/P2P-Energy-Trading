@@ -21,7 +21,8 @@
   text-align: start !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   font-size: 1rem !important;
-  width: fit-content !important;
+  width: max-content !important;
+  /* width: fit-content !important; */ /*! word will be wrapped */
 }
 
 .sidebar button:hover {
