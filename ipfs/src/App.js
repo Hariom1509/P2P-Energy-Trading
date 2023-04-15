@@ -1,5 +1,6 @@
 import './App.css';
 import {useState} from 'react';
+import Web3 from "web3";
 import axios from 'axios';
 
 function App() {
@@ -7,6 +8,23 @@ function App() {
   const [fileImg, setFileImg] = useState(null);
   const [hash, setHash] = useState('');
   console.log(process.env.REACT_APP_PINATA_API_KEY);
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+);
+
+  let flag = false;
+
+  web3.eth.net
+    .isListening()
+    .then((s) => {
+        console.log("Blockchain connection active");
+        flag = true;
+    })
+    .catch((e) => {
+        flag = false;
+        console.log("Blockchain not connected");
+    });
 
   const sendFileToIPFS = async (event) => {
     event.preventDefault();
