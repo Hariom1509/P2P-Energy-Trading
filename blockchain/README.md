@@ -1,6 +1,8 @@
 ## Getting Started
 
-Project Link: https://thirdweb.com/contracts/deploy/QmPs8mb7UNjoogyzHGvCxr7utwfD3hofPez6BLumDjRLzT
+Project Link: https://thirdweb.com/contracts/deploy/QmRfLCWq42XoDXTmM5hE53jLnmCqg2r3Fm7XFaAT4r2vNF
+
+Contract Address: 0xe71fCB275fd345e1384B74a45203636C8e9847B8
 
 Create a project using this example:
 
