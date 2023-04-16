@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const solc = require('solc');
 const Web3 = require('web3');
+require("dotenv").config({ path: "./.env" });
 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const mnemonic = 'analyst perfect crunch draft error soft rule toilet secret rib desk vapor'
@@ -41,9 +42,9 @@ console.log('ABI Successful');
 const bytecode = output.contracts["EnergyTrading.sol"]["EnergyTrading"].evm.bytecode.object;
 console.log('ByteCode Successful');
 
-let mainAccount = '0x733c3dbB78C6d6128c55af4a980B33c71310cEb4'; //Ganache Account
+let mainAccount = process.env.ADDRESS; //Ganache Account
 
-let ADDRESS = '0xE3B16f562f2E980023f372661CD78572F5D948B6'; //Contract Address
+let ADDRESS = process.env.DEPLOY; //Contract Address
 
 const contract = new web3.eth.Contract(ABI);
 
