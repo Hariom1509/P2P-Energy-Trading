@@ -41,9 +41,9 @@ console.log('ABI Successful');
 const bytecode = output.contracts["EnergyTrading.sol"]["EnergyTrading"].evm.bytecode.object;
 console.log('ByteCode Successful');
 
-let mainAccount = '0x115E6F963D74b2BeC33DA28b17802De4E614c0ab'; //Ganache Account
+let mainAccount = '0x733c3dbB78C6d6128c55af4a980B33c71310cEb4'; //Ganache Account
 
-let ADDRESS = '0x098BB75a0989aA40D0840A2B9a0c1179F494545d'; //Contract Address
+let ADDRESS = '0xE3B16f562f2E980023f372661CD78572F5D948B6'; //Contract Address
 
 const contract = new web3.eth.Contract(ABI);
 
@@ -115,16 +115,16 @@ async function test(){
     // const res6 = await Add_Order("Hariom1509", "hariom", "390018", 8, 3, 100, ABI, ADDRESS);
     // console.log(res6);
 
-    const res7 = await View_Corder("Hariom1509", ABI, ADDRESS);
-    console.log(res7.events.FCalled.returnValues['_a'][0] === undefined);
-    // console.log("Consumer id:" + res7.events.FCalled.returnValues['_a'][0][0]);
+    // const res7 = await View_Corder("hariom", ABI, ADDRESS);
+    // console.log(res7.events.FCalled.returnValues['_a'][0] === undefined);
+    // console.log("Consumer id:" + res7.events.FCalled.returnValues['_a'][0].length);
     // console.log("Area: " + res7.events.FCalled.returnValues['_a'][0][1]);
     // console.log("Kwh: " + res7.events.FCalled.returnValues['_a'][0][2]);
     // console.log("Price: " + res7.events.FCalled.returnValues['_a'][0][3]);
     // console.log("Time: " + res7.events.FCalled.returnValues['_a'][0][4]);
 
-    const res8 = await View_Porder("hariom", ABI, ADDRESS);
-    console.log(res7.events.FCalled.returnValues['_a'][0] === undefined);
+    // const res8 = await View_Porder("hariom", ABI, ADDRESS);
+    // console.log(res7.events.FCalled.returnValues['_a'][0] === undefined);
     // console.log("Prosumer id:" + res8.events.FCalled.returnValues['_a'][0][0]);
     // console.log("Area: " + res8.events.FCalled.returnValues['_a'][0][1]);
     // console.log("Kwh: " + res8.events.FCalled.returnValues['_a'][0][2]);
