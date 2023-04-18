@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import SideBar from "../Sidebar/SideBar";
+import Web3 from "web3";
+import axios from "axios";
 import "./BuyUnits.css";
 import { ShoppingCart, CurrencyRupee, Add } from "@mui/icons-material";
 import { useState } from "react";
@@ -15,6 +17,24 @@ const BuyUnits = () => {
   const [unit, setUnit] = useState(0);
   const [id, setId] = useState("Initial id");
   const [units, setUnits] = useState([]);
+
+  let flag = false;
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+  );
+
+  web3.eth.net
+    .isListening()
+    .then((s) => {
+        console.log("Blockchain connection active");
+        flag = true;
+    })
+    .catch((e) => {
+        flag = false;
+        console.log("Blockchain not connected");
+    });
+
   const updateUnits = async () => {
     const host = "http://localhost:5000";
     const response = await fetch(`${host}/api/unit/updateunits`, {
@@ -30,9 +50,36 @@ const BuyUnits = () => {
       }),
     });
     const data = await response.json();
-    if (data.success) setSuccess(true);
+    if (data.success && flag === true) {
+      setSuccess(true);
+      axios({
+        method: "post",
+        url: "http://localhost:5000/api/postuserorder",
+        headers: {},
+        data: {
+          pid: seller,
+          cid: seller,
+          area: "390015",
+          kwh: unit,
+          price: price,
+          cbal: 100,
+        },
+      }).then((res) => {
+        console.log(res.status);
+        console.log(res);
+      }).then(() => {
+        setMess(data.messgae);
+        alert('Order Successfull');
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
     else setErr(true);
     setMess(data.message);
+
+
   };
   const FetchUnits = async () => {
     const host = "http://localhost:5000";
