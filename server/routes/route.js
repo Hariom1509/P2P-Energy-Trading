@@ -6,11 +6,19 @@ const {
   Verification,
   ForgetPassword,
   ResetPassword,
-  GetUser
+  GetUser,
+  FetchUsers,
+  UpdateUser,
 } = require("./auth");
 const { body, validationResult } = require("express-validator");
 const { UpdateUnits, FetchUnits } = require("./unit");
 const verifytoken = require("../middleware/verifytoken");
+
+//to get all unverified users
+router.get("/auth/fetchusers", FetchUsers);
+
+//verified user
+router.post("/auth/updateuser", UpdateUser);
 
 //to get user information
 router.post("/auth/getuser", verifytoken, GetUser);
@@ -48,7 +56,5 @@ router.post(
 );
 
 router.post("/auth/resetpassword/:token", ResetPassword);
-
-
 
 module.exports = router;

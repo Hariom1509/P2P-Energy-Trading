@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  varified: {
+  verified: {
     type: Boolean,
     default: false,
   },
