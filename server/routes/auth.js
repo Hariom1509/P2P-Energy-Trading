@@ -6,6 +6,7 @@ const nodemailer = require("../service/nodemailer");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
 const path = require("path");
+const { log } = require("console");
 
 dotenv.config();
 
@@ -302,4 +303,32 @@ exports.GetUser = async (request, response) => {
       .status(500)
       .json({ success: false, message: error });
   }
+};
+
+// All unverified users
+exports.FetchUsers = async (request, response) => {
+  const users = await User.find({ verified: { $eq: false } });
+  response.status(200).json(users);
+};
+
+// Update users
+exports.UpdateUser = async (request, response) => {
+  let _id = request.body;
+  const existingUser = await User.findOne({ _id: _id });
+    existingUser.verified = true;
+    existingUser.save(async (err) => {
+      if (err) {
+        return response.status(404).json({
+          success: false,
+          message:
+            "Your request could not be processed as entered. Please try again.",
+          severity: "info",
+        });
+      }
+    });
+  response.status(200).json({
+    success: true,
+    message: `User has been varified!`,
+    severity: "success",
+  });
 };

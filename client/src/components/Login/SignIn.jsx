@@ -17,6 +17,11 @@ const signIn = () => {
   });
   const [err, setErr] = useState(false);
   const [mess, setMess] = useState("");
+  const [admin, setAdmin] = useState(false);
+
+  const adminLogin = () => {
+    setAdmin(!admin);
+  }
 
   const login = async () => {
     const { email, password } = credentials;
@@ -44,7 +49,9 @@ const signIn = () => {
       // );
 
       // console.log(data.user, data.success);
-      navigate("/home");
+      if(!admin)
+        navigate("/home");
+      else  navigate("/admin");
     } else {
       setErr(true);
       setMess(data.message);
@@ -93,7 +100,13 @@ const signIn = () => {
             >
               Sign in
             </button>
-            <div className="row justify-content-end">
+            <div className="row justify-content-between">
+              <div className="mb-3 mt-1 col-auto reset">
+                <label className="tip">
+                  <input type="checkbox" onChange={adminLogin} className="mx-1" />
+                  Admin Login
+                </label>
+              </div>
               <div className="tip mb-3 mt-1 col-auto reset">
                 Forgot Password?{" "}
                 <button onClick={() => navigate("/forget")}>Click here</button>
