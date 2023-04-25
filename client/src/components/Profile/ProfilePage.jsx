@@ -67,7 +67,7 @@ const ProfilePage = () => {
                   <span className="ttl">Funds</span>
                   <button
                     className="ttc"
-                    style={{ pointerEvents: user.varified ? "auto" : "none" }}
+                    style={{ pointerEvents: user.verified ? "auto" : "none" }}
                     onClick={() => navigate("/funds")}
                   >
                     Check
