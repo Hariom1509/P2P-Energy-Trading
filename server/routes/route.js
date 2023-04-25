@@ -11,6 +11,7 @@ const {
   UpdateUser,
 } = require("./auth");
 const { body, validationResult } = require("express-validator");
+const blockController = require("../controller/blockController");
 const { UpdateUnits, FetchUnits } = require("./unit");
 const verifytoken = require("../middleware/verifytoken");
 
@@ -56,5 +57,20 @@ router.post(
 );
 
 router.post("/auth/resetpassword/:token", ResetPassword);
+
+module.exports = router;
+router.post("/postuserdata/", blockController.addAllUsers);
+
+router.post("postuserbalance/", blockController.addAllBalance);
+
+router.post("/postuserorder/",blockController.addAllOrders);
+
+router.post("/getuserbal/",blockController.viewAllBalance);
+
+router.post("/getconorder/",blockController.viewCOrder);
+
+router.post("/getprorder/", blockController.viewPOrder);
+
+
 
 module.exports = router;

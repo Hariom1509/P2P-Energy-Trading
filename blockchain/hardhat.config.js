@@ -1,13 +1,19 @@
-require("@nomicfoundation/hardhat-toolbox");
-require('dotenv').config();
-
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.17",
-  networks : {
-    goerli: {
-      url: process.env.GOERLI_URL,
-      accounts: [process.env.PRIVATE_KEY],
-    }
-  }
+  solidity: {
+    version: '0.8.9',
+    networks:{
+      hardhat:{},
+      polygon:{
+        url: 'https://polygon-mumbai.g.alchemy.com/v2/O0NoeH1LAg3fNJKYjtNoDAHVW1QsAmWk',
+        accounts: [`0x${process.env.PRIVATE_KEY}`]
+      }
+    },
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
 };
