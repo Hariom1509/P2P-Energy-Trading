@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import HomePage from "./components/Home/HomePage";
+import AdminLogin from "./components/Admin Login/AdminLogin";
 import SignIn from "./components/Login/SignIn";
 import SignUp from "./components/Register/SignUp";
 import ForgotPassword from "./components/Forgot Password/ForgotPassword";
@@ -22,6 +23,7 @@ const App = () => {
         <Routes>
         <Route path="/" element={<SignIn />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/admin" element={<AdminLogin />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/forget" element={<ForgotPassword />} />

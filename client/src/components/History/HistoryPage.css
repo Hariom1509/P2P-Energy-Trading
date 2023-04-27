@@ -1,0 +1,32 @@
+.Table {
+  height: 100%;
+  width: 95%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  margin: auto;
+  padding: 1%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.Table .Prosumer {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.Table .Prosumer h4 {
+  border-bottom: 1px solid green;
+}
+
+.Table .Consumer {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.Table .Consumer h4 {
+  border-bottom: 1px solid red;
+}

@@ -12,27 +12,30 @@ export const UserState = (props) => {
     mobileNumber: "",
     type: "",
     area: "",
-    varified: false,
+    verified: false,
   });
   const host = "http://localhost:5000";
 
-  const setuser = (id, name, email, mobileNumber, type, area, varified) => {
-    setUser({ id, name, email, mobileNumber, type, area, varified });
+  const setuser = (id, name, email, mobileNumber, type, area, verified) => {
+    setUser({ id, name, email, mobileNumber, type, area, verified });
   };
 
   const getUser = async () => {
     //API call
-    const response = await fetch(`${host}/api/auth/getuser`, {
+    await fetch(`${host}/api/auth/getuser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "token": localStorage.getItem('token')
+        token: localStorage.getItem("token"),
       },
-
-    });
-    const data = await response.json();
-    console.log(data);
-    setUser(data);
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((e) => console.error(e));
   };
 
   return (

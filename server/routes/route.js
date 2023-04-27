@@ -9,11 +9,15 @@ const {
   GetUser,
   FetchUsers,
   UpdateUser,
+  TransactionIDs,
 } = require("./auth");
 const { body, validationResult } = require("express-validator");
 const blockController = require("../controller/blockController");
 const { UpdateUnits, FetchUnits } = require("./unit");
 const verifytoken = require("../middleware/verifytoken");
+
+//to get ID of buyer/seller
+router.post("/auth/transactionids", TransactionIDs);
 
 //to get all unverified users
 router.get("/auth/fetchusers", FetchUsers);
