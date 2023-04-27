@@ -39,6 +39,9 @@ const BuyUnits = () => {
       console.log("Blockchain not connected");
     });
 
+    console.log(seller);
+    console.log(user.email);
+
   const updateUnits = async () => {
     const host = "http://localhost:5000";
     const response = await fetch(`${host}/api/unit/updateunits`, {
@@ -62,7 +65,7 @@ const BuyUnits = () => {
         headers: {},
         data: {
           pid: seller,
-          cid: seller,
+          cid: user.email,
           area: "390015",
           kwh: unit,
           price: price,
@@ -117,6 +120,7 @@ const BuyUnits = () => {
                   onChange={(e) => {
                     const val = e.target.value;
                     const details = val.split(",");
+                    console.log(details);
                     setId(details[0]);
                     setSeller(details[1]);
                     setPrice(parseInt(details[2]));
@@ -141,7 +145,7 @@ const BuyUnits = () => {
                         ]}
                         key={unit._id}
                       >
-                        {unit.userID.substring(0, 8)}, {unit.price},{unit.units}
+                        {unit.userID.substring(0, 12)}, {unit.price},{unit.units}
                       </option>
                     ) : null
                   )}
@@ -150,6 +154,10 @@ const BuyUnits = () => {
               <div className="w-100 my-1 py-1 d-flex justify-content-between">
                 <span className="ttl">Seller</span>
                 <span className="ttc">{seller}</span>
+              </div>
+              <div className="w-100 my-1 py-1 d-flex justify-content-between">
+                <span className="ttl">Units</span>
+                <span className="ttc">{maxUnits}</span>
               </div>
               <div className="w-100 my-1 py-1 d-flex justify-content-between">
                 <span className="ttl">Price</span>
