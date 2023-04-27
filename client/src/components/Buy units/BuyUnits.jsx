@@ -5,6 +5,8 @@ import axios from "axios";
 import "./BuyUnits.css";
 import { ShoppingCart, CurrencyRupee, Add } from "@mui/icons-material";
 import { useState } from "react";
+import { UserContext } from "../Context/UserState";
+import { useContext } from "react";
 
 const BuyUnits = () => {
   const [success, setSuccess] = useState(false);
@@ -17,6 +19,8 @@ const BuyUnits = () => {
   const [unit, setUnit] = useState(0);
   const [id, setId] = useState("Initial id");
   const [units, setUnits] = useState([]);
+  const context = useContext(UserContext);
+  const { user, getUser } = context;
 
   let flag = false;
 
@@ -27,12 +31,12 @@ const BuyUnits = () => {
   web3.eth.net
     .isListening()
     .then((s) => {
-        console.log("Blockchain connection active");
-        flag = true;
+      console.log("Blockchain connection active");
+      flag = true;
     })
     .catch((e) => {
-        flag = false;
-        console.log("Blockchain not connected");
+      flag = false;
+      console.log("Blockchain not connected");
     });
 
   const updateUnits = async () => {
@@ -64,22 +68,21 @@ const BuyUnits = () => {
           price: price,
           cbal: 100,
         },
-      }).then((res) => {
-        console.log(res.status);
-        console.log(res);
-      }).then(() => {
-        setMess(data.messgae);
-        alert('Order Successfull');
-        window.location.reload();
       })
-      .catch((err) => {
-        console.log(err);
-      })
-    }
-    else setErr(true);
+        .then((res) => {
+          console.log(res.status);
+          console.log(res);
+        })
+        .then(() => {
+          setMess(data.messgae);
+          alert("Order Successfull");
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else setErr(true);
     setMess(data.message);
-
-
   };
   const FetchUnits = async () => {
     const host = "http://localhost:5000";
@@ -94,6 +97,7 @@ const BuyUnits = () => {
   // };
   useEffect(() => {
     FetchUnits();
+    getUser();
   }, []);
   return (
     <>
@@ -126,19 +130,21 @@ const BuyUnits = () => {
                   <option value="Area" selected disabled>
                     seller, unit price, total units
                   </option>
-                  {units.map((unit) => (
-                    <option
-                      value={[
-                        unit.userID,
-                        unit.userName,
-                        unit.price,
-                        unit.units,
-                      ]}
-                      key={unit.userID}
-                    >
-                      {unit.userID}, {unit.price}, {unit.units}
-                    </option>
-                  ))}
+                  {units.map((unit) =>
+                    user.id !== unit.userID ? (
+                      <option
+                        value={[
+                          unit.userID,
+                          unit.userName,
+                          unit.price,
+                          unit.units,
+                        ]}
+                        key={unit._id}
+                      >
+                        {unit.userID.substring(0, 8)}, {unit.price},{unit.units}
+                      </option>
+                    ) : null
+                  )}
                 </select>
               </div>
               <div className="w-100 my-1 py-1 d-flex justify-content-between">

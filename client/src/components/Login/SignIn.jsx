@@ -3,14 +3,10 @@ import "./SignIn.css";
 import "../Forms.css";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-// import { useContext } from "react";
-// import { UserContext } from "../Context/UserState";
 
 const signIn = () => {
   const host = "http://localhost:5000";
   const navigate = useNavigate();
-  // const context = useContext(UserContext);
-  // const { setuser } = context;
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -21,7 +17,7 @@ const signIn = () => {
 
   const adminLogin = () => {
     setAdmin(!admin);
-  }
+  };
 
   const login = async () => {
     const { email, password } = credentials;
@@ -38,20 +34,8 @@ const signIn = () => {
     const data = await response.json();
     if (data.success) {
       localStorage.setItem("token", data.authtoken);
-
-      // setuser(
-      //   data.user.id,
-      //   data.user.name,
-      //   data.user.email,
-      //   data.user.mobileNumber,
-      //   data.user.type,
-      //   data.user.area
-      // );
-
-      // console.log(data.user, data.success);
-      if(!admin)
-        navigate("/home");
-      else  navigate("/admin");
+      if (!admin) navigate("/home");
+      else navigate("/admin");
     } else {
       setErr(true);
       setMess(data.message);
@@ -103,7 +87,11 @@ const signIn = () => {
             <div className="row justify-content-between">
               <div className="mb-3 mt-1 col-auto reset">
                 <label className="tip">
-                  <input type="checkbox" onChange={adminLogin} className="mx-1" />
+                  <input
+                    type="checkbox"
+                    onChange={adminLogin}
+                    className="mx-1"
+                  />
                   Admin Login
                 </label>
               </div>

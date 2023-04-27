@@ -287,11 +287,12 @@ exports.ResetPassword = async (request, response) => {
 
 // User details
 exports.GetUser = async (request, response) => {
-  const _id = request.id
+  const _id = request.id;
   try {
     const user = await User.findOne({ _id });
     response.json({
       success: true,
+      id: _id,
       name: user.name,
       email: user.email,
       type: user.type,
@@ -331,4 +332,12 @@ exports.UpdateUser = async (request, response) => {
     message: `User has been varified!`,
     severity: "success",
   });
+};
+
+// Buyer/Seller ID
+exports.TransactionIDs = async (request, response) => {
+  let {email} = request.body;
+  const TransactionDetail = await User.findOne({ email: email });
+  let TransactionID = TransactionDetail._id;
+  response.status(200).json(TransactionID);
 };
