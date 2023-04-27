@@ -299,8 +299,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 // const web3 = new Web3(provider);
 
 // COPY PASTE HERE
-const mainAccount = '0x733c3dbB78C6d6128c55af4a980B33c71310cEb4';
-const ADDRESS = '0xE3B16f562f2E980023f372661CD78572F5D948B6';
+const mainAccount = process.env.mainAccount;
+const ADDRESS = process.env.ADDRESS;
 
 exports.addAllUsers = async(req, res) => {
     const contractInstance = new web3.eth.Contract(ABI, ADDRESS);

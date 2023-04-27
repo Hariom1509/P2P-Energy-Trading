@@ -44,6 +44,9 @@ contract EnergyTrading{
             if(allUsers[i].id == _id){
                 flag = 1;
             }
+            else if(keccak256(abi.encodePacked(allUsers[i].hash)) == keccak256(abi.encodePacked(hash))){
+                flag = 2;
+            }
         }
 
         if(flag == 0){
@@ -96,6 +99,19 @@ contract EnergyTrading{
         }
 
         return allOrders[allOrders.length-1].pid;
+    }
+
+    function viewHash(string memory id) public view returns (string memory){
+
+        bytes32 _id = keccak256(abi.encodePacked(id));
+        for(uint i=0;i<allUsers.length;i++)
+        {
+            if(allUsers[i].id == _id){
+                return allUsers[i].hash;
+            }
+        }
+
+        return "user404";
     }
 
     function viewCustOrder(string memory id) public {
