@@ -42,6 +42,7 @@ exports.UpdateUnits = async (request, response) => {
       units: unitsToUpdate,
       status: "pending",
       userName: user.name,
+      userEmail: user.email,
     });
     existingUnits.save(async (err) => {
       if (err) {
