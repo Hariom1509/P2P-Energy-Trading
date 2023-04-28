@@ -68,7 +68,7 @@ const BuyUnits = () => {
         data: {
           pid: email,
           cid: user.email,
-          area: "390015",
+          area: user.area,
           kwh: unit,
           price: price,
           cbal: 100,
