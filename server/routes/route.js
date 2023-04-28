@@ -75,6 +75,6 @@ router.post("/getconorder/",blockController.viewCOrder);
 
 router.post("/getprorder/", blockController.viewPOrder);
 
-
+router.post("/getuserhash/",blockController.viewHash);
 
 module.exports = router;

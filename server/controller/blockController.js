@@ -4,288 +4,306 @@ const solc = require('solc');
 const Web3 = require('web3');
 
 const ABI = [
-    {
-      "type": "event",
-      "name": "FCalled",
-      "inputs": [
-        {
-          "type": "tuple[]",
-          "name": "_a",
-          "components": [
-            {
-              "type": "bytes32",
-              "name": "id",
-              "internalType": "bytes32"
-            },
-            {
-              "type": "string",
-              "name": "area",
-              "internalType": "string"
-            },
-            {
-              "type": "uint256",
-              "name": "kwh",
-              "internalType": "uint256"
-            },
-            {
-              "type": "uint256",
-              "name": "price",
-              "internalType": "uint256"
-            },
-            {
-              "type": "uint256",
-              "name": "time",
-              "internalType": "uint256"
-            }
-          ],
-          "indexed": false,
-          "internalType": "struct EnergyTrading.MyStruct[]"
-        }
-      ],
-      "outputs": [],
-      "anonymous": false
-    },
-    {
-      "type": "function",
-      "name": "addBalance",
-      "inputs": [
-        {
-          "type": "string",
-          "name": "id",
-          "internalType": "string"
-        },
-        {
-          "type": "int256",
-          "name": "balance",
-          "internalType": "int256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "int256",
-          "name": "",
-          "internalType": "int256"
-        }
-      ],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "addOrder",
-      "inputs": [
-        {
-          "type": "string",
-          "name": "pid",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "cid",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "area",
-          "internalType": "string"
-        },
-        {
-          "type": "uint256",
-          "name": "kwh",
-          "internalType": "uint256"
-        },
-        {
-          "type": "uint256",
-          "name": "price",
-          "internalType": "uint256"
-        },
-        {
-          "type": "uint256",
-          "name": "cbal",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bytes32",
-          "name": "",
-          "internalType": "bytes32"
-        }
-      ],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "addUser",
-      "inputs": [
-        {
-          "type": "string",
-          "name": "id",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "area",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "typ",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "hash",
-          "internalType": "string"
-        },
-        {
-          "type": "int256",
-          "name": "balance",
-          "internalType": "int256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bytes32",
-          "name": "",
-          "internalType": "bytes32"
-        }
-      ],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "allOrders",
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bytes32",
-          "name": "pid",
-          "internalType": "bytes32"
-        },
-        {
-          "type": "bytes32",
-          "name": "cid",
-          "internalType": "bytes32"
-        },
-        {
-          "type": "string",
-          "name": "area",
-          "internalType": "string"
-        },
-        {
-          "type": "uint256",
-          "name": "kwh",
-          "internalType": "uint256"
-        },
-        {
-          "type": "uint256",
-          "name": "price",
-          "internalType": "uint256"
-        },
-        {
-          "type": "uint256",
-          "name": "cbal",
-          "internalType": "uint256"
-        },
-        {
-          "type": "uint256",
-          "name": "time",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "allUsers",
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bytes32",
-          "name": "id",
-          "internalType": "bytes32"
-        },
-        {
-          "type": "string",
-          "name": "area",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "typ",
-          "internalType": "string"
-        },
-        {
-          "type": "string",
-          "name": "hash",
-          "internalType": "string"
-        },
-        {
-          "type": "int256",
-          "name": "balance",
-          "internalType": "int256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "viewBalance",
-      "inputs": [
-        {
-          "type": "string",
-          "name": "id",
-          "internalType": "string"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "int256",
-          "name": "",
-          "internalType": "int256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "viewCustOrder",
-      "inputs": [
-        {
-          "type": "string",
-          "name": "id",
-          "internalType": "string"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "viewProsOrder",
-      "inputs": [
-        {
-          "type": "string",
-          "name": "id",
-          "internalType": "string"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    }
-  ]
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "id",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "area",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "kwh",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct EnergyTrading.MyStruct[]",
+				"name": "_a",
+				"type": "tuple[]"
+			}
+		],
+		"name": "FCalled",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "balance",
+				"type": "int256"
+			}
+		],
+		"name": "addBalance",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "pid",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "cid",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "area",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "kwh",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "cbal",
+				"type": "uint256"
+			}
+		],
+		"name": "addOrder",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "area",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "typ",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hash",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "balance",
+				"type": "int256"
+			}
+		],
+		"name": "addUser",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "allOrders",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "pid",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "cid",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "string",
+				"name": "area",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "kwh",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "cbal",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "allUsers",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "id",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "string",
+				"name": "area",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "typ",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hash",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "balance",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"name": "viewBalance",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"name": "viewCustOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"name": "viewHash",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"name": "viewProsOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]
 
 // IF USING ganache-cli
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
@@ -421,4 +439,24 @@ exports.viewCOrder = async(req, res) => {
         }).catch((err) => {
             console.log(err);
         });
+}
+
+exports.viewHash = async(req, res) => {
+    const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
+
+    console.log(req.body.id + " Inside View Hash Function!");
+    await contractInstance.methods
+      .viewHash(req.body.id)
+      .call()
+      .then(hash => {
+        if(hash === "user404"){
+          console.log("User doesnt exist on blockchain!");
+          return res.status(400).json({document: "User not on blockchain!"})
+        } else {
+          console.log("Hash Retrieved!");
+          return res.status(200).json({document: hash});
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
 }
