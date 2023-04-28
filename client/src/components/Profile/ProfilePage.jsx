@@ -5,12 +5,88 @@ import SideBar from "../Sidebar/SideBar";
 import "./ProfilePage.css";
 import { UserContext } from "../Context/UserState";
 import { useContext } from "react";
+import {useState} from 'react';
+import Web3 from "web3";
+import axios from 'axios';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const context = useContext(UserContext);
   const { user, getUser } = context;
 
+  const [fileImg, setFileImg] = useState(null);
+  const [hash, setHash] = useState('');
+  console.log("da72ecc5de2f5e2a0158");
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+  );
+
+  let flag = false;
+
+  web3.eth.net
+    .isListening()
+    .then((s) => {
+        console.log("Blockchain connection active");
+        flag = true;
+    })
+    .catch((e) => {
+        flag = false;
+        console.log("Blockchain not connected");
+    });
+
+  const sendFileToIPFS = async (event) => {
+    event.preventDefault();
+    if (fileImg) {
+      console.log(fileImg);
+            const formData = new FormData();
+            formData.append('file', fileImg);
+            const  url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+
+            axios.post(url, 
+              formData,
+              {
+                headers: {
+                  'Content-Type': `multipart/form-data; boundary= ${formData._boundary}`,
+                  'pinata_api_key': "8e0c8abc5ac71d1cc1e9",
+                  'pinata_secret_api_key': "ab4c6105b5a0a1266788e4fdbb593e6c7e26497ae7b31909ae2f5b934d8d1937",
+                }
+              }
+              ).then(function (response) {
+                alert(response.data.IpfsHash);
+                setHash(response.data.IpfsHash);
+                console.log(hash);
+                axios({
+                  method: "POST",
+                  url: "http://localhost:5000/api/postuserdata/",
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                  },
+                  data:{
+                    id: user.email,
+                    area: user.area,
+                    typ: user.type,
+                    hash: response.data.IpfsHash,
+                    balance: 0, 
+                  },
+                }).then((res) => {
+                  console.log(res.status);
+                  alert("User Data added successfully! Wait for Verification!");
+                  window.location.reload();
+                }).catch((err)=>{
+                  console.log(err);
+                });
+            }).catch(function (error) {
+                alert(error)
+            });
+    }
+  }
+
+  //postuserdata
+  //omctflubcfdblzzobe@bbitf.com
+  //id, area, typ, hash, bal
   useEffect(() => {
     getUser();
   }, []);
@@ -77,8 +153,10 @@ const ProfilePage = () => {
               <div className="sec">
                 <div className="w-100 my-1 py-3 d-flex justify-content-between">
                   <span className="ttl">Verify document to activate Funds</span>
-                  <input type="file" id="upload" hidden />
-                  <label for="upload">Choose file</label>
+                  <form onSubmit={sendFileToIPFS}>
+                    <input type="file" onChange={(event) =>setFileImg(event.target.files[0])} required />
+                    <button type="submit" >Upload File</button>            
+                  </form>
                 </div>
               </div>
             </div>
