@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./AdminLogin.css";
 import { PowerSettingsNew } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import Web3 from "web3";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -9,6 +10,24 @@ const AdminLogin = () => {
   const [success, setSuccess] = useState(false);
   const [mess, setMess] = useState("");
   const [err, setErr] = useState(false);
+  const [hash, setHash] = useState("");
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+  );
+
+  let flag = false;
+
+  web3.eth.net
+    .isListening()
+    .then((s) => {
+        console.log("Blockchain connection active");
+        flag = true;
+    })
+    .catch((e) => {
+        flag = false;
+        console.log("Blockchain not connected");
+    });
 
   const UpdateUser = async (_id) => {
     const host = "http://localhost:5000";
@@ -39,6 +58,45 @@ const AdminLogin = () => {
     const data = await response.json();
     setUsers(data);
   };
+
+  const GetHash = async(email) => {
+    try{
+      const res = await fetch(
+        "http://localhost:5000/api/getuserhash/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          },
+          body: JSON.stringify({
+            id: email,
+          }),
+        }
+      )
+  
+      const json = await res.json();
+  
+      if(json.status === 200){
+        console.log("Got Hash!");
+      } else {
+        console.log(json.message);
+      }
+  
+      console.log(json, "json hash");
+  
+      let url =
+      "https://ipfs.io/ipfs/" + json.document + "#toolbar=0";
+  
+      setHash(url);
+  
+      console.log(url);
+      console.log(hash);
+    } catch (err) {
+      console.log(err, "in getting hash from blockchain");
+    }
+  }
 
   useEffect(() => {
     FetchUsers();
@@ -99,6 +157,15 @@ const AdminLogin = () => {
               <p className="tip">{user.email}</p>
               <p className="tip">{user.mobileNumber}</p>
               <p className="tip">{user.area}</p>
+              <button
+                className="btn btn-primary col-12"
+                onClick={() => {
+                  GetHash(user.email);
+                }}
+              >
+                Get Doc
+              </button>
+              <br></br>
               <button
                 className="btn btn-primary col-12"
                 onClick={() => {
