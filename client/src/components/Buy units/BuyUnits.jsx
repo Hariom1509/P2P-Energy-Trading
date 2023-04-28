@@ -14,6 +14,7 @@ const BuyUnits = () => {
   const [err, setErr] = useState(false);
   const [seller, setSeller] = useState("seller name");
   const [price, setPrice] = useState(0);
+  const [email, setEmail] = useState("");
   const [maxUnits, setMaxUnits] = useState("0");
   const [amount, setAmount] = useState(0);
   const [unit, setUnit] = useState(0);
@@ -40,6 +41,7 @@ const BuyUnits = () => {
     });
 
     console.log(seller);
+    console.log(email);
     console.log(user.email);
 
   const updateUnits = async () => {
@@ -64,9 +66,9 @@ const BuyUnits = () => {
         url: "http://localhost:5000/api/postuserorder",
         headers: {},
         data: {
-          pid: seller,
+          pid: email,
           cid: user.email,
-          area: "390015",
+          area: user.area,
           kwh: unit,
           price: price,
           cbal: 100,
@@ -125,6 +127,7 @@ const BuyUnits = () => {
                     setSeller(details[1]);
                     setPrice(parseInt(details[2]));
                     setMaxUnits(details[3]);
+                    setEmail(details[4]);
                     setErr(false);
                     setSuccess(false);
                     setMess("");

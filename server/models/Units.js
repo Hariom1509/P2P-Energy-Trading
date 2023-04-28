@@ -9,6 +9,10 @@ const unitSchema = mongoose.Schema({
     type: String,
     ref: 'User'
   } ,
+  userEmail: {
+    type: String,
+    ref: 'User'
+  },
   price: {
     type: Number,
     required: true,
