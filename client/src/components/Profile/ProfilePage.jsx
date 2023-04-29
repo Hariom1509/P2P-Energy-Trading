@@ -16,6 +16,8 @@ const ProfilePage = () => {
 
   const [fileImg, setFileImg] = useState(null);
   const [hash, setHash] = useState('');
+  const [veri, setVeri] = useState(false);
+  console.log("Verified: " + veri);
   console.log("da72ecc5de2f5e2a0158");
 
   const web3 = new Web3(
@@ -143,7 +145,7 @@ const ProfilePage = () => {
                   <span className="ttl">Funds</span>
                   <button
                     className="ttc"
-                    style={{ pointerEvents: user.verified ? "auto" : "none" }}
+                    style={{ pointerEvents: veri ? 'auto' : 'none' }}
                     onClick={() => navigate("/funds")}
                   >
                     Check
