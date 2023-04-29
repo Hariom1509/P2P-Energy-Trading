@@ -67,6 +67,8 @@ router.post("/postuserdata/", blockController.addAllUsers);
 
 router.post("/postuserbalance/", blockController.addAllBalance);
 
+router.post("/postusersubbalance/", blockController.subAllBalance);
+
 router.post("/postuserorder/",blockController.addAllOrders);
 
 router.post("/getuserbal/",blockController.viewAllBalance);

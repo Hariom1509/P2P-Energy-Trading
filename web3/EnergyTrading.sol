@@ -68,6 +68,18 @@ contract EnergyTrading{
         return allUsers[allUsers.length - 1].balance;
     }
 
+    function subBalance(string memory id, uint256 balance) public payable returns(uint256){
+        bytes32 _id = keccak256(abi.encodePacked(id));
+
+        for(uint i=0;i<allUsers.length; ++i){
+            if(allUsers[i].id == _id){
+                allUsers[i].balance = allUsers[i].balance - balance;
+            }
+        }
+
+        return allUsers[allUsers.length - 1].balance;
+    }
+
     function viewBalance(string memory id) public view returns(uint256){
         bytes32 _id = keccak256(abi.encodePacked(id));
         uint256 flag = 0;
