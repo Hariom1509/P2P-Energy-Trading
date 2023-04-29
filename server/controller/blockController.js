@@ -157,6 +157,30 @@ const ABI = [
 				"internalType": "string",
 				"name": "id",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "balance",
+				"type": "uint256"
+			}
+		],
+		"name": "subBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
 			}
 		],
 		"name": "viewCustOrder",
@@ -358,6 +382,22 @@ exports.addAllBalance = async(req, res) => {
         });
 }
 
+exports.subAllBalance = async(req, res) => {
+    const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
+
+    console.log(req.body.id, req.body.balance);
+    await contractInstance.methods
+        .subBalance(req.body.id, req.body.balance)
+        .send(
+            {from: mainAccount, gasPrice: "0xFFFF", gasLimit: "0xFFFFF"}
+        ).then( () => {
+            console.log("Balance Added Successfully");
+            return res.status(200).json({ document: "Balance Added Successfully!" })
+        }).catch((err) => {
+            console.log(err);
+        });
+}
+
 exports.viewAllBalance = async(req, res) => {
     const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
 
@@ -417,9 +457,9 @@ exports.viewPOrder = async(req, res) => {
 exports.viewCOrder = async(req, res) => {
     const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
 
-    console.log(req.body.pid);
+    console.log(req.body.cid);
     await contractInstance.methods
-        .viewCustOrder(req.body.pid)
+        .viewCustOrder(req.body.cid)
         .send(
             {from: mainAccount, gasPrice: "0xFFFF", gasLimit: "0xFFFFF"}
         ).then(result => {

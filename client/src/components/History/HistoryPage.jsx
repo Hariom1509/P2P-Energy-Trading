@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../Sidebar/SideBar";
 import "./HistoryPage.css";
+import Web3 from "web3";
 import { UserContext } from "../Context/UserState";
 import { useContext } from "react";
 
@@ -8,6 +9,81 @@ const HistoryPage = () => {
   const context = useContext(UserContext);
   const { user, getUser } = context;
   const [id, setId] = useState("avirajrathod2002.ar@gmail.com");
+
+  let flag = false;
+
+  console.log(user.email);
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+  );
+
+  web3.eth.net
+    .isListening()
+    .then((s) => {
+      console.log("Blockchain connection active");
+      flag = true;
+    })
+    .catch((e) => {
+      flag = false;
+      console.log("Blockchain not connected");
+    });
+
+    const getProOrder = async() => {
+      console.log(user.email);
+        const res = await fetch(
+          "http://localhost:5000/api/getprorder/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              pid: user.email,
+            }),
+          });
+
+        const json = await res.json();
+
+        console.log(json.document);
+        console.log(json.document.length);
+
+        if(json.status === 200){
+          console.log("Prosumer Selling Data Retrieved!!")
+        } else {
+          console.log(json.message);
+        }
+    }
+
+    const getConOrder = async() => {
+      console.log(user.email);
+        const res = await fetch(
+          "http://localhost:5000/api/getconorder/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              cid: user.email,
+            }),
+          });
+
+        const json = await res.json();
+
+        console.log(json.document);
+        console.log(json.document.length);
+
+        if(json.status === 200){
+          console.log("Consumer Data Retrieved!!")
+        } else {
+          console.log(json.message);
+        }
+    }
 
   const getID = (email) => {
     const host = "http://localhost:5000";
@@ -32,9 +108,8 @@ const HistoryPage = () => {
   };
 
   useEffect(() => {
-    getUser();
-    const t = getID(id);
-  }, []);
+    getUser();   
+  }, [])
 
   return (
     <>
@@ -90,6 +165,8 @@ const HistoryPage = () => {
             </table>
           </div>
         </div>
+        <button onClick={getConOrder}>Get Consumer Order</button>
+        <button onClick={getProOrder}>Get Prosumer Order</button>
       </div>
     </>
   );
