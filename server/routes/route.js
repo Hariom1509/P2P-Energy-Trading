@@ -65,7 +65,7 @@ router.post("/auth/resetpassword/:token", ResetPassword);
 module.exports = router;
 router.post("/postuserdata/", blockController.addAllUsers);
 
-router.post("postuserbalance/", blockController.addAllBalance);
+router.post("/postuserbalance/", blockController.addAllBalance);
 
 router.post("/postuserorder/",blockController.addAllOrders);
 
