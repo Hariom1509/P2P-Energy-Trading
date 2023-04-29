@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from "../../Sidebar/SideBar";
 import "./Funds.css";
 import {
@@ -7,8 +7,112 @@ import {
   Add,
   SettingsBackupRestore,
 } from "@mui/icons-material";
+import { UserContext } from "../../Context/UserState";
+import { useContext } from "react";
+import {useState} from 'react';
+import Web3 from "web3";
 
 const Funds = () => {
+
+  const context = useContext(UserContext);
+  const { user, getUser } = context;
+  const [val, setVal] = useState(0);
+  const [bal, setBalance] = useState(0);
+
+  console.log(user.email);
+
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+  );
+
+  let flag = false;
+
+  web3.eth.net
+    .isListening()
+    .then((s) => {
+        console.log("Blockchain connection active");
+        flag = true;
+    })
+    .catch((e) => {
+        flag = false;
+        console.log("Blockchain not connected");
+    });
+
+    const addBalance = async(event) => {
+      event.preventDefault();
+
+      console.log(val);
+
+      try{
+        const res = await fetch(
+          "http://localhost:5000/api/postuserbalance/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              id: user.email,
+              balance: val,
+            }),
+          }
+        )
+
+        const json = await res.json();
+
+        if(json.status === 200){
+          console.log('Balance Added!');
+        } else {
+          console.log(json.message);
+        }
+      } catch(err) {
+        console.log(err);
+      }
+
+    }
+
+    const getBalance = async() => {
+
+      console.log(user.email);
+      try{
+        const res = await fetch(
+          "http://localhost:5000/api/getuserbal/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              id: user.email,
+            }),
+          }
+        )
+
+        const json = await res.json();
+
+        console.log(json.document);
+
+        setBalance(json.document);
+
+        if(json.status === 200){
+          console.log('Balance Retrieved!');
+        } else {
+          console.log(json.message);
+        }
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    useEffect(() => {
+      getUser();
+      getBalance();
+    }, []);
+
   return (
     <>
       <div className="w-100 h-100 d-flex justify-content-between flex-row">
@@ -23,22 +127,25 @@ const Funds = () => {
               <h6 className="ttl">Available margin (cash)</h6>
               <h4 className="ttl text-danger">
                 <CurrencyRupee />
-                1234
+                {bal}
               </h4>
             </div>
             <div className="sec4">
+            <form onSubmit={addBalance}>
+              <input type = "number" onChange={(event) => setVal(event.target.value)} required />
               <button className="bg-success text-white px-3 py-2 mt-2 mb-3 b1">
-                <Add /> Add funds
+                Add funds
               </button>
-              <button className="bg-info text-white px-3 py-2 mt-2 mb-3 b2">
-                <SettingsBackupRestore /> Withdraw
+            </form>
+              <button onClick={getBalance} className="bg-info text-white px-3 py-2 mt-2 mb-3 b2">
+                Withdraw
               </button>
             </div>
             <div className="sec2">
-              <div className="w-100 my-1 py-1 d-flex justify-content-between">
+              {/* <div className="w-100 my-1 py-1 d-flex justify-content-between">
                 <span className="ttl">Available margin</span>
                 <span className="ttc"><CurrencyRupee sx={{fontSize: `${1}rem`}} />1234</span>
-              </div>
+              </div> */}
               <div className="w-100 my-1 py-1 d-flex justify-content-between">
                 <span className="ttl">Used margin</span>
                 <span className="ttc"><CurrencyRupee sx={{fontSize: `${1}rem`}} />0</span>

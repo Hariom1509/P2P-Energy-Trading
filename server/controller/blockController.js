@@ -5,46 +5,6 @@ const Web3 = require('web3');
 
 const ABI = [
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"components": [
-					{
-						"internalType": "bytes32",
-						"name": "id",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "string",
-						"name": "area",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "kwh",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "time",
-						"type": "uint256"
-					}
-				],
-				"indexed": false,
-				"internalType": "struct EnergyTrading.MyStruct[]",
-				"name": "_a",
-				"type": "tuple[]"
-			}
-		],
-		"name": "FCalled",
-		"type": "event"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -52,17 +12,17 @@ const ABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "int256",
+				"internalType": "uint256",
 				"name": "balance",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
 		"name": "addBalance",
 		"outputs": [
 			{
-				"internalType": "int256",
+				"internalType": "uint256",
 				"name": "",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "payable",
@@ -135,9 +95,9 @@ const ABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "int256",
+				"internalType": "uint256",
 				"name": "balance",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
 		"name": "addUser",
@@ -149,6 +109,96 @@ const ABI = [
 			}
 		],
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "id",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "area",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "kwh",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct EnergyTrading.MyStruct[]",
+				"name": "_a",
+				"type": "tuple[]"
+			}
+		],
+		"name": "FCalled",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "balance",
+				"type": "uint256"
+			}
+		],
+		"name": "subBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"name": "viewCustOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"name": "viewProsOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -231,9 +281,9 @@ const ABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "int256",
+				"internalType": "uint256",
 				"name": "balance",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -250,25 +300,12 @@ const ABI = [
 		"name": "viewBalance",
 		"outputs": [
 			{
-				"internalType": "int256",
+				"internalType": "uint256",
 				"name": "",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "id",
-				"type": "string"
-			}
-		],
-		"name": "viewCustOrder",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -288,19 +325,6 @@ const ABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "id",
-				"type": "string"
-			}
-		],
-		"name": "viewProsOrder",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
@@ -358,6 +382,22 @@ exports.addAllBalance = async(req, res) => {
         });
 }
 
+exports.subAllBalance = async(req, res) => {
+    const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
+
+    console.log(req.body.id, req.body.balance);
+    await contractInstance.methods
+        .subBalance(req.body.id, req.body.balance)
+        .send(
+            {from: mainAccount, gasPrice: "0xFFFF", gasLimit: "0xFFFFF"}
+        ).then( () => {
+            console.log("Balance Added Successfully");
+            return res.status(200).json({ document: "Balance Added Successfully!" })
+        }).catch((err) => {
+            console.log(err);
+        });
+}
+
 exports.viewAllBalance = async(req, res) => {
     const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
 
@@ -366,13 +406,7 @@ exports.viewAllBalance = async(req, res) => {
         .viewBalance(req.body.id)
         .call()
         .then( bal => {
-            if(bal == 65536){
-                console.log("User doesn't exist on blockchain!");
-                return res.status(400).json({document: "User not on blockchain"});
-            } else {
-                console.log("Balance Retrieved");
                 return res.status(200).json({document: bal});
-            }
         }).catch((err) => {
             console.log(err);
         });
@@ -423,9 +457,9 @@ exports.viewPOrder = async(req, res) => {
 exports.viewCOrder = async(req, res) => {
     const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
 
-    console.log(req.body.pid);
+    console.log(req.body.cid);
     await contractInstance.methods
-        .viewCustOrder(req.body.pid)
+        .viewCustOrder(req.body.cid)
         .send(
             {from: mainAccount, gasPrice: "0xFFFF", gasLimit: "0xFFFFF"}
         ).then(result => {

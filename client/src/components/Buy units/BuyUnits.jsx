@@ -23,6 +23,9 @@ const BuyUnits = () => {
   const context = useContext(UserContext);
   const { user, getUser } = context;
 
+  const [bal, setBalance] = useState(0);
+  const [balFlag, setBalFlag] = useState(false);
+
   let flag = false;
 
   const web3 = new Web3(
@@ -44,6 +47,40 @@ const BuyUnits = () => {
     console.log(email);
     console.log(user.email);
 
+    const subBalance = async(val) => {
+
+      console.log(val);
+
+      try{
+        const res = await fetch(
+          "http://localhost:5000/api/postusersubbalance/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              id: user.email,
+              balance: val,
+            }),
+          }
+        )
+
+        const json = await res.json();
+
+        if(json.status === 200){
+          console.log('Balance Added!');
+        } else {
+          console.log(json.message);
+        }
+      } catch(err) {
+        console.log(err);
+      }
+
+    }
+
   const updateUnits = async () => {
     const host = "http://localhost:5000";
     const response = await fetch(`${host}/api/unit/updateunits`, {
@@ -58,30 +95,69 @@ const BuyUnits = () => {
         _id: id,
       }),
     });
-    const data = await response.json();
-    if (data.success && flag === true) {
+
+        console.log(user.email);
+        const res = await fetch(
+          "http://localhost:5000/api/getuserbal/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              id: user.email,
+            }),
+          });
+
+        const json = await res.json();
+
+        console.log(json.document);
+
+        setBalance(json.document);
+
+        if(json.status === 200){
+          console.log('Balance Retrieved!');
+          setBalFlag(true);
+        } else {
+          console.log(json.message);
+        }
+    
+      const data = await response.json();
+
+      console.log(json.success +", " + data.success);
+      console.log("Current Bal: "+ json.document);
+    
+    if (data.success && flag === true && json.document >= (unit*price)) {
+      console.log("Inside Blockchain Post IF")
       setSuccess(true);
       axios({
         method: "post",
         url: "http://localhost:5000/api/postuserorder",
         headers: {},
         data: {
-          pid: email,
+          pid: "avirajrathod2002.ar@gmail.com",
           cid: user.email,
           area: user.area,
           kwh: unit,
           price: price,
-          cbal: 100,
+          cbal: json.document,
         },
       })
         .then((res) => {
           console.log(res.status);
           console.log(res);
+            let val = unit*price; 
+            console.log(val);
+            console.log("Balance Done!")
+            subBalance(val);
+
         })
         .then(() => {
-          setMess(data.messgae);
+          setMess(data.message);
           alert("Order Successfull");
-          window.location.reload();
+          //window.location.reload();
         })
         .catch((err) => {
           console.log(err);
