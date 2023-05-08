@@ -137,7 +137,7 @@ const BuyUnits = () => {
         url: "http://localhost:5000/api/postuserorder",
         headers: {},
         data: {
-          pid: "avirajrathod2002.ar@gmail.com",
+          pid: email,
           cid: user.email,
           area: user.area,
           kwh: unit,

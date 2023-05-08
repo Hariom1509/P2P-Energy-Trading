@@ -344,6 +344,9 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 const mainAccount = process.env.mainAccount;
 const ADDRESS = process.env.ADDRESS;
 
+console.log(mainAccount);
+console.log(ADDRESS);
+
 exports.addAllUsers = async(req, res) => {
     const contractInstance = new web3.eth.Contract(ABI, ADDRESS);
 
