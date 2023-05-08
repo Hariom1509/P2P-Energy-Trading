@@ -4,11 +4,25 @@ import "./HistoryPage.css";
 import Web3 from "web3";
 import { UserContext } from "../Context/UserState";
 import { useContext } from "react";
+import axios from "axios";
 
 const HistoryPage = () => {
   const context = useContext(UserContext);
   const { user, getUser } = context;
-  const [id, setId] = useState("avirajrathod2002.ar@gmail.com");
+  const [conData, setConData] = useState([]);
+  const [proData, setProData] = useState([]);
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  
+  const handleOptionSelect = (event) => {
+    setSelectedOption(event.target.value);
+    if (event.target.value === 'buy') {
+      getProOrder();
+    } else if (event.target.value === 'sell') {
+      getConOrder();
+    }
+  }
+  
 
   let flag = false;
 
@@ -47,10 +61,10 @@ const HistoryPage = () => {
 
         const json = await res.json();
 
-        console.log(json.document);
-        console.log(json.document.length);
-
         if(json.status === 200){
+          setProData(json.document);
+          console.log(proData);
+          console.log(proData.length);
           console.log("Prosumer Selling Data Retrieved!!")
         } else {
           console.log(json.message);
@@ -75,37 +89,16 @@ const HistoryPage = () => {
 
         const json = await res.json();
 
-        console.log(json.document);
-        console.log(json.document.length);
-
         if(json.status === 200){
           console.log("Consumer Data Retrieved!!")
         } else {
           console.log(json.message);
         }
-    }
 
-  const getID = (email) => {
-    const host = "http://localhost:5000";
-    fetch(`${host}/api/auth/transactionids`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        email,
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setId(data);
-        return data;
-      })
-      .catch((e) => console.error(e));
-  };
+        setConData(json.document);
+        console.log(conData);
+        console.log(conData.length);
+    }
 
   useEffect(() => {
     getUser();   
@@ -115,58 +108,64 @@ const HistoryPage = () => {
     <>
       <div className="w-100 h-100 d-flex justify-content-between flex-row">
         <SideBar />
-        <div className="Table">
-          {user.type === "Prosumer" ? (
-            <div className="Prosumer mb-3">
-              <h4 className="text-success p-1">Selling History</h4>
-              <table className="table">
-                <thead>
-                  <tr>
+        <div>
+          <select onChange={handleOptionSelect}>
+            <option value="">Select an option</option>
+            <option value="buy">Selling History</option>
+            <option value="sell">Buying History</option>
+          </select>
+          <div className="Table">
+          {selectedOption === "buy" &&
+            <table className="table">
+              <thead>
+              <tr>
                     <th scope="col">Consumer ID</th>
                     <th scope="col">Area</th>
                     <th scope="col">Kwh</th>
                     <th scope="col">Price</th>
                     <th scope="col">Time</th>
                   </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">{id}</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
+              </thead>
+              <tbody>
+                {proData && proData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item[0].slice(0, 9)}</td>
+                    <td>{item[1]}</td>
+                    <td>{item[2]}</td>
+                    <td>{item[3]}</td>
+                    <td>{item[4]}</td>
                   </tr>
-                </tbody>
-              </table>
-            </div>
-          ) : null}
-          <div className="Consumer mb-3">
-            <h4 className="text-danger p-1">Buying History</h4>
-            <table className="table">
+                ))}
+              </tbody>
+            </table>
+          }
+          
+          {selectedOption === "sell" &&
+            <table>
               <thead>
                 <tr>
-                  <th scope="col">Prosumer ID</th>
-                  <th scope="col">Area</th>
-                  <th scope="col">Kwh</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Time</th>
+                <th scope="col">Consumer ID</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Kwh</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Time</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>@mdo</td>
-                </tr>
+                {conData && conData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item[0].slice(0, 9)}</td>
+                    <td>{item[1]}</td>
+                    <td>{item[2]}</td>
+                    <td>{item[3]}</td>
+                    <td>{item[4]}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-          </div>
+          }
         </div>
-        <button onClick={getConOrder}>Get Consumer Order</button>
-        <button onClick={getProOrder}>Get Prosumer Order</button>
+      </div>
       </div>
     </>
   );
