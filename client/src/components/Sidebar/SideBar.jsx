@@ -21,6 +21,24 @@ const SideBar = () => {
   const context = useContext(UserContext);
   const { user, getUser } = context;
 
+  const startBuy = () => {
+    getUser();
+    if (user.verified) {
+      navigate("/buy");
+    } else {
+      alert("You are not verified yet to start trading :(");
+    }
+  };
+
+  const startSell = () => {
+    getUser();
+    if (user.verified) {
+      navigate("/sell");
+    } else {
+      alert("You are not verified yet to start trading :(");
+    }
+  };
+
   useEffect(() => {
     getUser();
   }, []);
@@ -79,15 +97,11 @@ const SideBar = () => {
           </button>
         </div>
         <div className="d-flex flex-row comp w-100 py-2 mb-2">
-          <PlaylistAdd
-            color="black"
-            cursor="pointer"
-            onClick={() => navigate("/buy")}
-          />{" "}
+          <PlaylistAdd color="black" cursor="pointer" onClick={startBuy} />{" "}
           <button
             className="w-75 px-2"
             style={{ display: show ? "block" : "none" }}
-            onClick={() => navigate("/buy")}
+            onClick={startBuy}
           >
             Buy Units
           </button>
@@ -97,12 +111,12 @@ const SideBar = () => {
             <PlaylistRemove
               color="black"
               cursor="pointer"
-              onClick={() => navigate("/sell")}
+              onClick={startSell}
             />{" "}
             <button
               className="w-75 px-2"
               style={{ display: show ? "block" : "none" }}
-              onClick={() => navigate("/sell")}
+              onClick={startSell}
             >
               Sell Units
             </button>
@@ -124,7 +138,7 @@ const SideBar = () => {
             Transaction History
           </button>
         </div>
-        <div className="d-flex flex-row comp w-100 py-2 mb-2">
+        {/* <div className="d-flex flex-row comp w-100 py-2 mb-2">
           <Insights
             color="black"
             cursor="pointer"
@@ -137,7 +151,7 @@ const SideBar = () => {
           >
             Analytics & Predictions
           </button>
-        </div>
+        </div> */}
         <div className="d-flex flex-row comp w-100 py-2 mb-2">
           <PowerSettingsNew
             color="black"

@@ -16,7 +16,6 @@ const ProfilePage = () => {
 
   const [fileImg, setFileImg] = useState(null);
   const [hash, setHash] = useState('');
-  const [veri, setVeri] = useState(false);
 
   // IF USING ropsten deployed testnetwork
   // const HDWalletProvider = require('@truffle/hdwallet-provider');
@@ -150,8 +149,12 @@ const ProfilePage = () => {
                   <span className="ttl">Funds</span>
                   <button
                     className="ttc"
-                    style={{ pointerEvents: veri ? 'auto' : 'none' }}
-                    onClick={() => navigate("/funds")}
+                    onClick={() => {
+                      getUser();
+                      if (user.verified) navigate("/funds");
+                      else
+                        alert("You are not verified yet to start trading :(");
+                    }}
                   >
                     Check
                   </button>

@@ -298,6 +298,7 @@ exports.GetUser = async (request, response) => {
       type: user.type,
       mobileNumber: user.mobileNumber,
       area: user.area,
+      verified: user.verified,
     });
   } catch (error) {
     response
