@@ -9,7 +9,7 @@ contract EnergyTrading{
         string area;
         string typ;
         string hash;
-        int balance;
+        uint256 balance;
     }
 
     //Use in Buy Units
@@ -17,18 +17,18 @@ contract EnergyTrading{
         bytes32 pid;
         bytes32 cid;
         string area;
-        uint kwh;
-        uint price;
-        uint cbal;
-        uint time;
+        uint256 kwh;
+        uint256 price;
+        uint256 cbal;
+        uint256 time;
     }
 
     struct MyStruct {
         bytes32 id;
         string area;
-        uint kwh;
-        uint price;
-        uint time;
+        uint256 kwh;
+        uint256 price;
+        uint256 time;
     }
     
     Order[] public allOrders;
@@ -36,13 +36,16 @@ contract EnergyTrading{
     
     User[] public allUsers;
 
-    function addUser(string memory id, string memory area, string memory typ, string memory hash, int balance) public payable returns(bytes32){
-        uint flag = 0;
+    function addUser(string memory id, string memory area, string memory typ, string memory hash, uint256 balance) public payable returns(bytes32){
+        uint256 flag = 0;
         bytes32 _id = keccak256(abi.encodePacked(id));
 
         for(uint i=0; i<allUsers.length; ++i){
             if(allUsers[i].id == _id){
                 flag = 1;
+            }
+            else if(keccak256(abi.encodePacked(allUsers[i].hash)) == keccak256(abi.encodePacked(hash))){
+                flag = 2;
             }
         }
 
@@ -53,7 +56,7 @@ contract EnergyTrading{
         return allUsers[allUsers.length - 1].id;
     }
 
-    function addBalance(string memory id, int balance) public payable returns(int){
+    function addBalance(string memory id, uint256 balance) public payable returns(uint256){
         bytes32 _id = keccak256(abi.encodePacked(id));
 
         for(uint i=0;i<allUsers.length; ++i){
@@ -65,20 +68,32 @@ contract EnergyTrading{
         return allUsers[allUsers.length - 1].balance;
     }
 
-    function viewBalance(string memory id) public view returns(int){
+    function subBalance(string memory id, uint256 balance) public payable returns(uint256){
         bytes32 _id = keccak256(abi.encodePacked(id));
-        uint flag = 0;
 
         for(uint i=0;i<allUsers.length; ++i){
             if(allUsers[i].id == _id){
-                return allUsers[i].balance;
-            }
-            else{
-                flag = 1;
+                allUsers[i].balance = allUsers[i].balance - balance;
             }
         }
 
-        return 65536;
+        return allUsers[allUsers.length - 1].balance;
+    }
+
+    function viewBalance(string memory id) public view returns(uint256){
+        bytes32 _id = keccak256(abi.encodePacked(id));
+        uint256 flag = 0;
+
+        for(uint i=0;i<allUsers.length; ++i){
+            if(allUsers[i].id == _id){
+                flag = allUsers[i].balance;
+            }
+            else{
+                flag = 0;
+            }
+        }
+
+        return flag;
     }
 
     function addOrder(string memory pid, string memory cid, string memory area, uint kwh, uint price, uint cbal) public payable returns (bytes32){
@@ -96,6 +111,19 @@ contract EnergyTrading{
         }
 
         return allOrders[allOrders.length-1].pid;
+    }
+
+    function viewHash(string memory id) public view returns (string memory){
+
+        bytes32 _id = keccak256(abi.encodePacked(id));
+        for(uint i=0;i<allUsers.length;i++)
+        {
+            if(allUsers[i].id == _id){
+                return allUsers[i].hash;
+            }
+        }
+
+        return "user404";
     }
 
     function viewCustOrder(string memory id) public {

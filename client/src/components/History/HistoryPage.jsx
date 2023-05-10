@@ -28,9 +28,16 @@ const HistoryPage = () => {
 
   console.log(user.email);
 
-  const web3 = new Web3(
-    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
-  );
+  // IF USING ropsten deployed testnetwork
+  // const HDWalletProvider = require('@truffle/hdwallet-provider');
+  // const mnemonic = 'analyst perfect crunch draft error soft rule toilet secret rib desk vapor'
+  // const providerOrUrl = 'https://sepolia.infura.io/v3/e32d040c29e94141a826f212f1d92109'
+
+  // const provider = new HDWalletProvider({ mnemonic, providerOrUrl });
+  // const web3 = new Web3(provider);
+
+    // IF USING ganache-cli
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
   web3.eth.net
     .isListening()
@@ -98,6 +105,10 @@ const HistoryPage = () => {
         setConData(json.document);
         console.log(conData);
         console.log(conData.length);
+    }
+
+    const utctodate = async(ts) => {
+      return new Date(ts*1000);
     }
 
   useEffect(() => {
