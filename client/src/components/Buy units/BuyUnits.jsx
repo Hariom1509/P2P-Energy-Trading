@@ -28,9 +28,16 @@ const BuyUnits = () => {
 
   let flag = false;
 
-  const web3 = new Web3(
-    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
-  );
+  // IF USING ropsten deployed testnetwork
+// const HDWalletProvider = require('@truffle/hdwallet-provider');
+// const mnemonic = 'analyst perfect crunch draft error soft rule toilet secret rib desk vapor'
+// const providerOrUrl = 'https://sepolia.infura.io/v3/e32d040c29e94141a826f212f1d92109'
+
+// const provider = new HDWalletProvider({ mnemonic, providerOrUrl });
+// const web3 = new Web3(provider);
+
+  // IF USING ganache-cli
+  const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
   web3.eth.net
     .isListening()
@@ -46,6 +53,40 @@ const BuyUnits = () => {
     console.log(seller);
     console.log(email);
     console.log(user.email);
+
+    const addBalance = async(val) => {
+
+      console.log(val);
+
+      try{
+        const res = await fetch(
+          "http://localhost:5000/api/postuserbalance/",
+          {
+            method: 'POST',
+            headers : {
+              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin' : '*',
+              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            },
+            body: JSON.stringify({
+              id: email,
+              balance: val,
+            }),
+          }
+        )
+
+        const json = await res.json();
+
+        if(json.status === 200){
+          console.log('Balance Added!');
+        } else {
+          console.log(json.message);
+        }
+      } catch(err) {
+        console.log(err);
+      }
+
+    }
 
     const subBalance = async(val) => {
 
@@ -71,7 +112,7 @@ const BuyUnits = () => {
         const json = await res.json();
 
         if(json.status === 200){
-          console.log('Balance Added!');
+          console.log('Balance Subtracted!');
         } else {
           console.log(json.message);
         }
@@ -81,21 +122,27 @@ const BuyUnits = () => {
 
     }
 
-  const updateUnits = async () => {
-    const host = "http://localhost:5000";
-    const response = await fetch(`${host}/api/unit/updateunits`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        price,
-        unitsToUpdate: -1 * unit,
-        _id: id,
-      }),
-    });
+    const subUnits = async () => {
+      const host = "http://localhost:5000";
+      const response = await fetch(`${host}/api/unit/updateunits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          price,
+          unitsToUpdate: -1 * unit,
+          _id: id,
+        }),
+      });
 
+      const data = await response.json();
+      setMess(data.message);
+
+    }
+
+  const updateUnits = async () => {
         console.log(user.email);
         const res = await fetch(
           "http://localhost:5000/api/getuserbal/",
@@ -123,13 +170,14 @@ const BuyUnits = () => {
         } else {
           console.log(json.message);
         }
-    
-      const data = await response.json();
 
-      console.log(json.success +", " + data.success);
       console.log("Current Bal: "+ json.document);
+
+      if(json.document < unit*price){
+        setMess('Low Balance! Cannot Perform Action');
+      }
     
-    if (data.success && flag === true && json.document >= (unit*price)) {
+    if (flag === true && json.document >= (unit*price)) {
       console.log("Inside Blockchain Post IF")
       setSuccess(true);
       axios({
@@ -152,10 +200,10 @@ const BuyUnits = () => {
             console.log(val);
             console.log("Balance Done!")
             subBalance(val);
-
+            addBalance(val);
         })
         .then(() => {
-          setMess(data.message);
+          subUnits();
           alert("Order Successfull");
           //window.location.reload();
         })
@@ -163,8 +211,8 @@ const BuyUnits = () => {
           console.log(err);
         });
     } else setErr(true);
-    setMess(data.message);
   };
+
   const FetchUnits = async () => {
     const host = "http://localhost:5000";
     const response = await fetch(`${host}/api/unit/fetchunits`, {
@@ -172,6 +220,7 @@ const BuyUnits = () => {
     });
     const data = await response.json();
     setUnits(data);
+    console.log(data);
   };
   // const Update = (e) => {
 
@@ -198,7 +247,7 @@ const BuyUnits = () => {
                   onChange={(e) => {
                     const val = e.target.value;
                     const details = val.split(",");
-                    console.log(details);
+                    console.log("Units Details "+val);
                     setId(details[0]);
                     setSeller(details[1]);
                     setPrice(parseInt(details[2]));
@@ -221,6 +270,7 @@ const BuyUnits = () => {
                           unit.userName,
                           unit.price,
                           unit.units,
+                          unit.userEmail,
                         ]}
                         key={unit._id}
                       >

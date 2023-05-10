@@ -335,7 +335,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 // IF USING ropsten deployed testnetwork
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const mnemonic = 'analyst perfect crunch draft error soft rule toilet secret rib desk vapor'
-// const providerOrUrl = 'https://ropsten.infura.io/v3/9c9ce33525ce49809af51a4b21ba1dfd'
+// const providerOrUrl = 'https://sepolia.infura.io/v3/e32d040c29e94141a826f212f1d92109'
 
 // const provider = new HDWalletProvider({ mnemonic, providerOrUrl });
 // const web3 = new Web3(provider);
@@ -409,6 +409,7 @@ exports.viewAllBalance = async(req, res) => {
         .viewBalance(req.body.id)
         .call()
         .then( bal => {
+				console.log("Balance retrieved successfully: " + bal);
                 return res.status(200).json({document: bal});
         }).catch((err) => {
             console.log(err);
