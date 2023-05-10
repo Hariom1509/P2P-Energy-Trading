@@ -34,8 +34,8 @@ const signIn = () => {
     const data = await response.json();
     if (data.success) {
       localStorage.setItem("token", data.authtoken);
-      if (!admin) navigate("/home");
-      else navigate("/admin");
+      if (!admin && email !== "u19ee009@eed.svnit.ac.in") navigate("/home");
+      else if(email === "u19ee009@eed.svnit.ac.in") navigate("/admin");
     } else {
       setErr(true);
       setMess(data.message);

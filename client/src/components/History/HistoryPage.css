@@ -1,6 +1,18 @@
+.main{
+  overflow: hidden;
+  width: 90%;
+  margin: auto;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1%;
+}
+
 .Table {
   height: 100%;
-  width: 95%;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -29,4 +41,11 @@
 
 .Table .Consumer h4 {
   border-bottom: 1px solid red;
+}
+
+.options{
+  margin: auto;
+  padding: 1%;
+  border-radius: 5px;
+  background-color: azure;
 }

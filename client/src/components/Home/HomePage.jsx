@@ -25,28 +25,26 @@ const HomePage = () => {
             <h4>{user.email}</h4>
           </div>
           <div className="w-100 p-3 m-2 bg-white d-flex justify-content-around flex-column mt-5 box shadow">
-            <div className="d-flex justify-content-between mt-3 p-2">
-              <span>Available balance</span>
-              <span className="text-muted">
-                <CurrencyRupee />
-                1234
-              </span>
+            <div className="mt-3 p-2">
+              <span style={{fontWeight: `bold`}}>Web-app Features</span>
             </div>
-            <div className="d-flex justify-content-between mt-3 p-2">
-              <span>Units bought</span>
-              <span className="text-muted">3</span>
+            <div className="mt-3 p-2">
+              <span>Document Verification</span>
             </div>
-            <div className="d-flex justify-content-between mt-3 p-2">
-              <span>Units sold</span>
-              <span className="text-muted">1</span>
+            <div className="mt-3 p-2">
+              <span>Add funds</span>
             </div>
-          </div>
-          <div className="w-100 p-3 m-2 bg-white d-flex justify-content-around flex-column mt-5 box shadow">
-            <div className="d-flex justify-content-between mt-2 p-2">
-              <span>Get your bills</span>
-              <span>
-                <DoubleArrow cursor="pointer" color="success" />
-              </span>
+            <div className="mt-3 p-2">
+              <span>Buy units</span>
+            </div>
+            <div className="mt-3 p-2">
+              <span>Sell units</span>
+            </div>
+            <div className="mt-3 p-2">
+              <span>Block Chain Based Transaction</span>
+            </div>
+            <div className="mt-3 p-2">
+              <span>Reset Password</span>
             </div>
           </div>
         </div>

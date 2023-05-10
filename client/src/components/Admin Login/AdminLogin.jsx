@@ -100,6 +100,7 @@ const AdminLogin = () => {
   
       console.log(url);
       console.log(hash);
+      window.open(url, '_blank', 'noreferrer');
     } catch (err) {
       console.log(err, "in getting hash from blockchain");
     }
@@ -165,7 +166,7 @@ const AdminLogin = () => {
               <p className="tip">{user.mobileNumber}</p>
               <p className="tip">{user.area}</p>
               <button
-                className="btn btn-primary col-12"
+                className="btn btn-primary col-12 my-2"
                 onClick={() => {
                   GetHash(user.email);
                 }}

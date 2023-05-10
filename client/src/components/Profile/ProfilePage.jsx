@@ -161,7 +161,7 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="sec">
-                <div className="w-100 my-1 py-3 d-flex justify-content-between">
+                <div className="w-100 my-1 py-3 d-flex justify-content-end flex-row-reverse">
                   <span className="ttl">Verify document to activate Funds</span>
                   <form onSubmit={sendFileToIPFS}>
                     <input type="file" onChange={(event) =>setFileImg(event.target.files[0])} required />

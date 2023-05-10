@@ -13,16 +13,15 @@ const HistoryPage = () => {
   const [proData, setProData] = useState([]);
 
   const [selectedOption, setSelectedOption] = useState(null);
-  
+
   const handleOptionSelect = (event) => {
     setSelectedOption(event.target.value);
-    if (event.target.value === 'buy') {
+    if (event.target.value === "buy") {
       getProOrder();
-    } else if (event.target.value === 'sell') {
+    } else if (event.target.value === "sell") {
       getConOrder();
     }
-  }
-  
+  };
 
   let flag = false;
 
@@ -36,8 +35,10 @@ const HistoryPage = () => {
   // const provider = new HDWalletProvider({ mnemonic, providerOrUrl });
   // const web3 = new Web3(provider);
 
-    // IF USING ganache-cli
-    const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+  // IF USING ganache-cli
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+  );
 
   web3.eth.net
     .isListening()
@@ -50,133 +51,131 @@ const HistoryPage = () => {
       console.log("Blockchain not connected");
     });
 
-    const getProOrder = async() => {
-      console.log(user.email);
-        const res = await fetch(
-          "http://localhost:5000/api/getprorder/",
-          {
-            method: 'POST',
-            headers : {
-              "Content-Type": "application/json",
-              'Access-Control-Allow-Origin' : '*',
-              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-            },
-            body: JSON.stringify({
-              pid: user.email,
-            }),
-          });
+  const getProOrder = async () => {
+    console.log(user.email);
+    const res = await fetch("http://localhost:5000/api/getprorder/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      },
+      body: JSON.stringify({
+        pid: user.email,
+      }),
+    });
 
-        const json = await res.json();
+    const json = await res.json();
 
-        if(json.status === 200){
-          setProData(json.document);
-          console.log(proData);
-          console.log(proData.length);
-          console.log("Prosumer Selling Data Retrieved!!")
-        } else {
-          console.log(json.message);
-        }
+    if (json.status === 200) {
+      setProData(json.document);
+      console.log(proData);
+      console.log(proData.length);
+      console.log("Prosumer Selling Data Retrieved!!");
+    } else {
+      console.log(json.message);
+    }
+  };
+
+  const getConOrder = async () => {
+    console.log(user.email);
+    const res = await fetch("http://localhost:5000/api/getconorder/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      },
+      body: JSON.stringify({
+        cid: user.email,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.status === 200) {
+      console.log("Consumer Data Retrieved!!");
+    } else {
+      console.log(json.message);
     }
 
-    const getConOrder = async() => {
-      console.log(user.email);
-        const res = await fetch(
-          "http://localhost:5000/api/getconorder/",
-          {
-            method: 'POST',
-            headers : {
-              "Content-Type": "application/json",
-              'Access-Control-Allow-Origin' : '*',
-              'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-            },
-            body: JSON.stringify({
-              cid: user.email,
-            }),
-          });
+    setConData(json.document);
+    console.log(conData);
+    console.log(conData.length);
+  };
 
-        const json = await res.json();
-
-        if(json.status === 200){
-          console.log("Consumer Data Retrieved!!")
-        } else {
-          console.log(json.message);
-        }
-
-        setConData(json.document);
-        console.log(conData);
-        console.log(conData.length);
-    }
-
-    const utctodate = async(ts) => {
-      return new Date(ts*1000);
-    }
+  const utctodate = async (ts) => {
+    return new Date(ts * 1000);
+  };
 
   useEffect(() => {
-    getUser();   
-  }, [])
+    getUser();
+  }, []);
 
   return (
     <>
-      <div className="w-100 h-100 d-flex justify-content-between flex-row">
+      <div className="w-100 h-100 d-flex justify-content-between align-item-center">
         <SideBar />
-        <div>
-          <select onChange={handleOptionSelect}>
+        <div className="main">
+          <select onChange={handleOptionSelect} className="options">
             <option value="">Select an option</option>
             <option value="buy">Selling History</option>
             <option value="sell">Buying History</option>
           </select>
           <div className="Table">
-          {selectedOption === "buy" &&
-            <table className="table">
-              <thead>
-              <tr>
+            {selectedOption === "buy" && (
+              <table className="table">
+                <thead>
+                  <tr className="bg-success text-white">
                     <th scope="col">Consumer ID</th>
                     <th scope="col">Area</th>
                     <th scope="col">Kwh</th>
                     <th scope="col">Price</th>
                     <th scope="col">Time</th>
                   </tr>
-              </thead>
-              <tbody>
-                {proData && proData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item[0].slice(0, 9)}</td>
-                    <td>{item[1]}</td>
-                    <td>{item[2]}</td>
-                    <td>{item[3]}</td>
-                    <td>{item[4]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          }
-          
-          {selectedOption === "sell" &&
-            <table>
-              <thead>
-                <tr>
-                <th scope="col">Consumer ID</th>
+                </thead>
+                <tbody>
+                  {proData &&
+                    proData.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item[0].slice(0, 9)}</td>
+                        <td>{item[1]}</td>
+                        <td>{item[2]}</td>
+                        <td>{item[3]}</td>
+                        <td>{item[4]}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            )}
+
+            {selectedOption === "sell" && (
+              <table className="table">
+                <thead>
+                  <tr className="bg-danger text-white">
+                    <th scope="col">Consumer ID</th>
                     <th scope="col">Area</th>
                     <th scope="col">Kwh</th>
                     <th scope="col">Price</th>
                     <th scope="col">Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {conData && conData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item[0].slice(0, 9)}</td>
-                    <td>{item[1]}</td>
-                    <td>{item[2]}</td>
-                    <td>{item[3]}</td>
-                    <td>{item[4]}</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          }
+                </thead>
+                <tbody>
+                  {conData &&
+                    conData.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item[0].slice(0, 9)}</td>
+                        <td>{item[1]}</td>
+                        <td>{item[2]}</td>
+                        <td>{item[3]}</td>
+                        <td>{item[4]}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
-      </div>
       </div>
     </>
   );
