@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract EnergyTrading{
 
-    //User Data String: Use in Admin Portal
+    //User Data String: Use the data in Admin Portal
     struct User{
         bytes32 id;
         string area;
@@ -82,18 +82,14 @@ contract EnergyTrading{
 
     function viewBalance(string memory id) public view returns(uint256){
         bytes32 _id = keccak256(abi.encodePacked(id));
-        uint256 flag = 0;
 
         for(uint i=0;i<allUsers.length; ++i){
             if(allUsers[i].id == _id){
-                flag = allUsers[i].balance;
-            }
-            else{
-                flag = 0;
+                return allUsers[i].balance;
             }
         }
 
-        return flag;
+        return 65536;
     }
 
     function addOrder(string memory pid, string memory cid, string memory area, uint kwh, uint price, uint cbal) public payable returns (bytes32){

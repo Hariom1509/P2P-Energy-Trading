@@ -19,8 +19,8 @@ const ProfilePage = () => {
 
   // IF USING ropsten deployed testnetwork
   // const HDWalletProvider = require('@truffle/hdwallet-provider');
-  // const mnemonic = 'analyst perfect crunch draft error soft rule toilet secret rib desk vapor'
-  // const providerOrUrl = 'https://sepolia.infura.io/v3/e32d040c29e94141a826f212f1d92109'
+  // const mnemonic = ''
+  // const providerOrUrl = ''
 
   // const provider = new HDWalletProvider({ mnemonic, providerOrUrl });
   // const web3 = new Web3(provider);
@@ -54,8 +54,8 @@ const ProfilePage = () => {
               {
                 headers: {
                   'Content-Type': `multipart/form-data; boundary= ${formData._boundary}`,
-                  'pinata_api_key': "8e0c8abc5ac71d1cc1e9",
-                  'pinata_secret_api_key': "ab4c6105b5a0a1266788e4fdbb593e6c7e26497ae7b31909ae2f5b934d8d1937",
+                  'pinata_api_key': "",
+                  'pinata_secret_api_key': "",
                 }
               }
               ).then(function (response) {

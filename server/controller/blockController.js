@@ -334,8 +334,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
 // IF USING ropsten deployed testnetwork
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
-// const mnemonic = 'analyst perfect crunch draft error soft rule toilet secret rib desk vapor'
-// const providerOrUrl = 'https://sepolia.infura.io/v3/e32d040c29e94141a826f212f1d92109'
+// const mnemonic = ''
+// const providerOrUrl = ''
 
 // const provider = new HDWalletProvider({ mnemonic, providerOrUrl });
 // const web3 = new Web3(provider);
